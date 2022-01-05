@@ -1,8 +1,8 @@
 export default class PatientController{
 
     editModal = new bootstrap.Modal(document.getElementById("edit-modal"));
-
     editToast = new bootstrap.Toast(document.getElementById("edit-toast"));
+    deleteToast = new bootstrap.Toast(document.getElementById("delete-toast"));
 
     constructor(selector, model){
         this.selector = selector;
@@ -38,6 +38,8 @@ export default class PatientController{
                 <td>${p.email}</td>
                 <td>${p.phone}</td>
                 <td>${p.cpf}</td>
+                <td>${p.cep}</td>
+                <td>${p.rg}</td>
                 <td>
                     <button id="btn-edit-${p.id}" class="btn btn-warning btn-sm"><i class="bi bi-pencil"></i></button>
                     <button id="btn-del-${p.id}" class="btn btn-danger btn-sm"><i class="bi bi-trash"></i></button>
@@ -57,6 +59,8 @@ export default class PatientController{
             $(`#editEmail`).val(patient.email);
             $(`#editPhone`).val(patient.phone);
             $(`#editCpf`).val(patient.cpf);
+            $(`#editCep`).val(patient.cep);
+            $(`#editRg`).val(patient.rg);
 
             this.editModal.show();
         });
@@ -66,8 +70,12 @@ export default class PatientController{
     /* DELETE PATIENT */
     setUpDelete(patient){
         $(`#btn-del-${patient.id}`).click(() => { 
-            this.model.delete(patient.id);
-            this.buildTable();
+            //(FEATURE) Confirmação de deleção método confirm().
+            if( confirm(`Do you want to confirm user deletion? `) === true ){
+                this.model.delete(patient.id);
+                this.buildTable();
+                this.deleteToast.show({ outohide: true });
+            }  
         });
     }
 
@@ -75,6 +83,9 @@ export default class PatientController{
     setUpForm(){
         $("#phone, #editPhone").mask("(00) 00000-0000"); 
         $("#cpf, #editCpf").mask("000.000.000-00");
+        //(FIXES) Máscaras para os campos de CEP E RG.
+        $("#cep, #editCep").mask("00000-000");
+        $("#rg, #editRg").mask("0.000.000");
 
         $("#edit-patient").submit((e)=>{
             e.preventDefault();
@@ -87,6 +98,8 @@ export default class PatientController{
                 email: inputs[2].value,
                 phone: inputs[3].value,
                 cpf: inputs[4].value,
+                cep: inputs[5].value,
+                rg: inputs[6].value,
             };
             this.model.update(id, data);
             this.buildTable();

@@ -38,6 +38,14 @@
           <label for="cpf">CPF</label>
           <input type="text" name="cpf" id="cpf" class="form-control form-control-sm"/>
         </div>
+        <div>
+          <label for="cep">Zip Code</label>
+          <input type="text" name="cep" id="cep" class="form-control form-control-sm"/>
+        </div>
+        <div>
+          <label for="rg">RG</label>
+          <input type="text" name="rg" id="rg" class="form-control form-control-sm"/>
+        </div>
         <button type="submit" class="btn btn-dark mt-3">Regiter</button>
       </form>
     </section>
@@ -54,6 +62,8 @@
               <th>Email</th>
               <th>Phone</th>
               <th>CPF</th>
+              <th>CEP</th>
+              <th>RG</th>
               <th>Action</th>
             </tr>
           </thead>
@@ -88,6 +98,14 @@
                   <label for="editCpf">CPF</label>
                   <input type="text" name="editCpf" id="editCpf" class="form-control form-control-sm"/>
                 </div>
+                <div>
+                  <label for="editCep">CEP</label>
+                  <input type="text" name="editCep" id="editCep" class="form-control form-control-sm"/>
+                </div>
+                <div>
+                  <label for="editRg">RG</label>
+                  <input type="text" name="editRg" id="editRg" class="form-control form-control-sm"/>
+                </div>
                 <button type="submit" class="btn btn-dark mt-3">Update</button>
               </form>
             </div>
@@ -95,11 +113,20 @@
         </div>
       </div>
     </div>
-    <!-- Toast -->
+    <!-- Toast Update -->
     <div class="position-fixed bottom-0 start-0 p-3">
       <div id="edit-toast" class="toast bg-success text-white">
         <div class="d-flex">
           <div class="toast-body">Patient upadate successfully!</div>
+          <button class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+      </div>
+    </div>
+    <!-- Toast Delete -->
+    <div class="position-fixed bottom-0 start-0 p-3">
+      <div id="delete-toast" class="toast bg-danger text-white">
+        <div class="d-flex">
+          <div class="toast-body">Patient deleted successfully!</div>
           <button class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
         </div>
       </div>

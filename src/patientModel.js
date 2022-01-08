@@ -3,6 +3,9 @@ export default class PatientModel{
     currentId = 1;
     /* Add patient */
     add(data){
+        //this.patients = JSON.parse(localStorage.getItem("db_patient")) ?? [];
+        //console.log(db_patient);
+        //localStorage.setItem("db_patient", JSON.stringify(patients));
         this.patients.push({
             /* Desestrurando o objeto ...data para passar os valores */
             ...data,
@@ -10,7 +13,7 @@ export default class PatientModel{
         });
         this.currentId++;
     }
-    /* Upadate patient */
+    /* Upadate patient */  
     update(id, data){
         const patientIndex = this.patients.findIndex((p) => p.id === id);
 

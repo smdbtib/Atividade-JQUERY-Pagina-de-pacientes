@@ -9,6 +9,7 @@ export default class PatientController{
         this.model = model;
         this.setUpForm();
         this.setUpAdd();
+        this.buildTable();
     }
 
     /* ADD PATIENT */
@@ -20,7 +21,7 @@ export default class PatientController{
             inputs.forEach((input) => {
                 data[input.name] = input.value;
             });
-            this.model.add(data); 
+            this.model.add(data);
             $("#add-patient input").val("");
             this.buildTable();
         });
@@ -28,8 +29,15 @@ export default class PatientController{
 
     /* CONSTRUINDO A TABELA DE PACIENTES */
     buildTable(){
+        if(this.model.patients.length > 0){
+            $("#noPatiente").addClass("d-none")
+            $("#tablePatient").removeClass("d-none")
+        }else {
+            $("#noPatiente").removeClass("d-none")
+            $("#tablePatient").addClass("d-none")
+        }
         $(this.selector).empty();
-        this.model.patients.forEach((p) =>{
+            this.model.patients.forEach((p) =>{
             $(this.selector).append
             (`
              <tr>
@@ -49,6 +57,10 @@ export default class PatientController{
             this.setUpUpdatePatiente(p);
             this.setUpDelete(p);
         });
+
+        
+       
+            
     }
 
     /* EDITAR PATIENT NO MODAL */
@@ -71,7 +83,7 @@ export default class PatientController{
     setUpDelete(patient){
         $(`#btn-del-${patient.id}`).click(() => { 
             //(FEATURE) Confirmação de deleção método confirm().
-            if( confirm(`Do you want to confirm user deletion? `) === true ){
+            if( confirm(`Do you want to confirm patient deletion?`)){
                 this.model.delete(patient.id);
                 this.buildTable();
                 this.deleteToast.show({ outohide: true });

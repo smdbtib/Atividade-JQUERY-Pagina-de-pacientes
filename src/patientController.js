@@ -15,15 +15,19 @@ export default class PatientController{
     /* ADD PATIENT */
     setUpAdd(){
         $("#add-patient").submit((e) =>{
+            if (this.validateFormAdd() === true) {
+                console.log(`Form vállido`);
+                const inputs = $("#add-patient").serializeArray(); // Transform em array de objetos
+                const data = {};
+                inputs.forEach((input) => {
+                    data[input.name] = input.value;
+                });
+                this.model.add(data);
+                $("#add-patient input").val("");
+                this.buildTable();    
+                $("#add-patient").removeClass('was-validated');
+            }
             e.preventDefault();
-            const inputs = $("#add-patient").serializeArray(); // Transform em array de objetos
-            const data = {};
-            inputs.forEach((input) => {
-                data[input.name] = input.value;
-            });
-            this.model.add(data);
-            $("#add-patient input").val("");
-            this.buildTable();
         });
     }
 
@@ -57,10 +61,6 @@ export default class PatientController{
             this.setUpUpdatePatiente(p);
             this.setUpDelete(p);
         });
-
-        
-       
-            
     }
 
     /* EDITAR PATIENT NO MODAL */
@@ -73,10 +73,11 @@ export default class PatientController{
             $(`#editCpf`).val(patient.cpf);
             $(`#editCep`).val(patient.cep);
             $(`#editRg`).val(patient.rg);
-
+            
+            localStorage.setItem("idEditaPacient", patient.id );
+            console.log(patient);
             this.editModal.show();
         });
-
     }
 
     /* DELETE PATIENT */
@@ -87,8 +88,43 @@ export default class PatientController{
                 this.model.delete(patient.id);
                 this.buildTable();
                 this.deleteToast.show({ outohide: true });
-            }  
+                console.log(patient);  
+            }
+            
         });
+    }
+    /* (FIXES) Adicione validações simples do bootstrap */
+    validateFormAdd(){
+        var name = $('#name');
+        var email = $('#email');
+        var phone = $('#phone');
+        var cpf = $('#cpf');
+        var cep = $('#cep');
+        var rg = $('#rg');
+        if (name.val() == '' || email.val() == '' || phone.val() == '' || cpf.val() == '' || cep.val() == '' || rg.val() == '' ) {
+            $("#add-patient").addClass('was-validated');
+            return false;
+        }
+        else {
+            return true;
+        }
+    }
+    
+    validateFormEdit(){
+        var editName = $('#editName');
+        var editEmail = $('#editEmail');
+        var editPhone = $('#editPhone');
+        var editCpf = $('#editCpf');
+        var editCep = $('#editCep');
+        var editRg = $('#editRg');
+
+        if (editName.val() == '' || editEmail.val() == '' || editPhone.val() == '' || editCpf.val() == '' || editCep.val() == '' || editRg.val() == '' ) {
+            $("#edit-patient").addClass('was-validated');
+            return false;
+        }
+        else {
+            return true;
+        }
     }
 
     /* FORMATANDO OS CAMPOS DO FOMULÁRIO */
@@ -100,25 +136,24 @@ export default class PatientController{
         $("#rg, #editRg").mask("0.000.000");
 
         $("#edit-patient").submit((e)=>{
+            if (this.validateFormEdit()) {
+                const inputs = $("#edit-patient").serializeArray(); // Transform em array de objetos            
+                const data = {
+                    name: inputs[1].value,
+                    email: inputs[2].value,
+                    phone: inputs[3].value,
+                    cpf: inputs[4].value,
+                    cep: inputs[5].value,
+                    rg: inputs[6].value,
+                };
+                this.model.update(localStorage.getItem("idEditaPacient"), data);
+                this.buildTable();
+                this.editModal.hide();
+                this.editToast.show({ outohide: true });
+    
+                $("#edit-patient input").val("");    
+            } 
             e.preventDefault();
-            
-            const inputs = $("#edit-patient").serializeArray(); // Transform em array de objetos            
-            const id = Number(inputs[0].value)
-            console.log(inputs);
-            const data = {
-                name: inputs[1].value,
-                email: inputs[2].value,
-                phone: inputs[3].value,
-                cpf: inputs[4].value,
-                cep: inputs[5].value,
-                rg: inputs[6].value,
-            };
-            this.model.update(id, data);
-            this.buildTable();
-            this.editModal.hide();
-            this.editToast.show({ outohide: true });
-
-            $("#edit-patient input").val("");
         });
     }
 }

@@ -1,28 +1,25 @@
 export default class PatientModel{
-    patients = [];
-    currentId = 1;
+    /* (FEATURE) Salve o vetor de pacientes no LocalStorage.*/
+    patients = JSON.parse(localStorage.getItem("db_patient")) ?? [] ; //JSON.parse 
+    currentId = 0;
     /* Add patient */
     add(data){
-        //this.patients = JSON.parse(localStorage.getItem("db_patient")) ?? [];
-        //console.log(db_patient);
-        //localStorage.setItem("db_patient", JSON.stringify(patients));
         this.patients.push({
-            /* Desestrurando o objeto ...data para passar os valores */
             ...data,
             id: this.currentId, 
         });
+        localStorage.setItem("db_patient", JSON.stringify(this.patients )); // JSON.stringify
         this.currentId++;
     }
     /* Upadate patient */  
     update(id, data){
-        const patientIndex = this.patients.findIndex((p) => p.id === id);
-
-        if(patientIndex > -1){
-            this.patients[patientIndex] = {...data, id};
-        }
+        this.patients[id] = {id, ...data};
+        localStorage.setItem("db_patient", JSON.stringify(this.patients)); // JSON.stringify
     }
     /* Delete patient */
     delete(id){
-        this.patients = this.patients.filter((p)=> p.id !== id)
+        const patientIndex = this.patients.findIndex((p) => p.id === id);
+        this.patients.splice(patientIndex,1)
+        localStorage.setItem("db_patient", JSON.stringify(this.patients)); // JSON.stringify
     }
 }
